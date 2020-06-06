@@ -19,7 +19,7 @@
     path: "{{ prysm_install_path }}"
     owner: "{{ prysm_user }}"
     group: "{{ prysm_user }}"
-    recursive: yes
+    recurse: yes
 
 - name: Configure correct IP address for node
   lineinfile:
