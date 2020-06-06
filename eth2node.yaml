@@ -1,6 +1,9 @@
 ---
 - hosts: all
   become: true
+  vars:
+    prysm-user: deploy
+    prysm-install-path: /opt/prysm-docker-compose
 
   roles:
   - eth2node

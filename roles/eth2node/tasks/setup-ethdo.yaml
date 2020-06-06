@@ -12,4 +12,4 @@
 - name: Install ethdo
   shell: GO111MODULE=on go get github.com/wealdtech/ethdo
   become: yes
-  become_user: deploy
+  become_user: "{{ prysm-user }}"
