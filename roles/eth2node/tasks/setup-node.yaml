@@ -11,19 +11,19 @@
 - name: Clone Ethereum 2.0 docker compose setup
   git:
     repo: "https://github.com/stefa2k/prysm-docker-compose"
-    dest: "{{ prysm-install-path }}"
+    dest: "{{ prysm_install_path }}"
 
 - name: Change file ownership and group of clone
   file:
     state: directory
-    path: "{{ prysm-install-path }}"
-    owner: "{{ prysm-user }}"
-    group: "{{ prysm-user }}"
+    path: "{{ prysm_install_path }}"
+    owner: "{{ prysm_user }}"
+    group: "{{ prysm_user }}"
     recursive: yes
 
 - name: Configure correct IP address for node
   lineinfile:
-    path: "{{ prysm-install-path }}/config/beacon.yaml"
+    path: "{{ prysm_install_path }}/config/beacon.yaml"
     regexp: '^p2p-host-ip: '
     line: 'p2p-host-ip: {{ ansible_default_ipv4.address }}'
 

@@ -2,4 +2,4 @@
 - name: Start prysm-docker-compose
   command: docker-compose up -d geth beacon
   args:
-    chdir: "{{ prysm-install-path }}"
+    chdir: "{{ prysm_install_path }}"
