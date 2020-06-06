@@ -1,0 +1,15 @@
+---
+- name: Install required system packages
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  loop:
+    - build-essential
+    - gcc
+    - golang
+
+- name: Install ethdo
+  shell: GO111MODULE=on go get github.com/wealdtech/ethdo
+  become: yes
+  become_user: deploy

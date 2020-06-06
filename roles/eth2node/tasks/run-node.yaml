@@ -1,0 +1,5 @@
+---
+- name: Start prysm-docker-compose
+  command: docker-compose up -d geth beacon
+  args:
+    chdir: /opt/prysm-docker-compose
