@@ -23,9 +23,6 @@
   register: wallet_info
 
 - name: Copy validator wallet to validator's datadir
-  copy:
-    remote_src: yes
-    src: {{ item }}
-    dest: {{ prysm_install_path }}/validator/
-  with_items: "{{ wallet_info.stdout.splitlines()|select('match', '^Location')|split(' ')[1] }}"
+  command: cp -R "{{ item.split(' ')[1] }}" "{{ prysm_install_path }}/validator/"
+  with_items: "{{ wallet_info.stdout.splitlines()|select('match', '^Location')|list }}"
   
