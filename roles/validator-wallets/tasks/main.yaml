@@ -16,4 +16,4 @@
   include_tasks: create-validator-account.yaml
   loop: "{{ query('sequence', 'start=1 end='+validator_accounts }}"
   loop_control:
-    extended: yes
+    index_var: validator_idx
