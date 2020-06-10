@@ -1,0 +1,9 @@
+---
+- name: Gather account names
+  command: /home/{{ prysm_user }}/go/bin/ethdo wallet accounts --wallet="{{ validator_wallet_name }}"
+  register: valiator_accounts
+  
+- name: test
+  debug:
+    msg: "{{ validator_wallet_name}}/{{ item }}"
+  with_items: "{{ valiator_accounts.stdout.splitlines() }}"
