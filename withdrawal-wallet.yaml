@@ -1,0 +1,15 @@
+---
+- hosts: all
+  become: yes
+  become_user: deploy
+  vars:
+    prysm_user: deploy
+    withdrawal_wallet_name: wd
+    withdrawal_wallet_type: hd
+    withdrawal_wallet_password: foobar
+    withdrawal_account_name: all
+    withdrawal_account_password: foobar
+  
+  
+  roles:
+  - withdrawal-wallet
