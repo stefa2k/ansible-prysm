@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: yes
+  # become_user: deploy
+  vars:
+    prysm_user: deploy
+    withdrawal_wallet_name: wd
+    withdrawal_account_name: all
+    validator_wallet_name: v
+    validator_wallet_type: hd
+    validator_wallet_password: foobar
+    validator_accounts_password: foobar
+    validator_accounts: 10
+    forkversion: 0x00000000
+  
+  roles:
+  - validator-wallets

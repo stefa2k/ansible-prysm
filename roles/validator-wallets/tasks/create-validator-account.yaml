@@ -1,0 +1,12 @@
+---
+- name: Create account
+  command: /home/{{ prysm_user }}/go/bin/ethdo account create --account="{{ validator_wallet_name }}/{{ ansible_loop.index }}" --walletpassphrase="{{ validator_wallet_password }}"  --passphrase="{{ validator_accounts_password }}"
+  
+- name: Get deposit data
+  command: /home/{{ prysm_user }}/go/bin/ethdo validator depositdata --withdrawalaccount="{{ withdrawal_wallet_name }}/{{ withdrawal_account_name }}" --validatoraccount="{{ validator_wallet_name }}/{{ ansible_loop.index }}"  --depositvalue=32000000000000000000 --raw --passphrase="{{ validator_accounts_password }}" --forkversion={{ forkversion }}
+  register: deposit_data_raw
+  
+- name: Save deposit data
+  lineinfile:
+    path: /home/{{ prysm_user }}/depositdata
+    line: "{{ deposit_data_raw }}"
