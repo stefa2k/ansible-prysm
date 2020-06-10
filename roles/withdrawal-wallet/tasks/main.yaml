@@ -10,6 +10,7 @@
 - name: Your wallet seed (write it down and store it safe!)
   debug:
     msg: "{{ wallet_seed }}"
+  when: withdrawal_wallet_type == "hd"
 
 - name: Create account
   command: /home/{{ prysm_user }}/go/bin/ethdo account create --account="{{ withdrawal_wallet_name }}/{{ withdrawal_account_name }}" --walletpassphrase="{{ withdrawal_wallet_password }}"  --passphrase="{{ withdrawal_account_password }}"
