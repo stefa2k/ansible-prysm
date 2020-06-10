@@ -1,8 +1,12 @@
 ---
-- task: Unlock geth account
-  command: docker exec -it geth geth attach {{ geth_connection }} --exec="personal.unlockAccount(\"{{ geth_account }}\",'{{ geth_account_password }}',36000)"
+- name: Unlock geth account
+  command: "docker exec -it geth geth attach {{ geth_connection }} --exec=\"personal.unlockAccount('{{ geth_account }}','{{ geth_account_password }}',36000)\""
 
-- task: Send funds
+- name: Gather deposit data
+  command: "cat /home/{{prysm_user}}/depositdata"
+  register: deposit_data
+
+- name: Send funds
   debug:
-    msg: docker exec -it geth geth attach {{ geth_connection }} --exec="eth.sendTransaction({from:eth.coinbase, to:'{{ deposit_contract }}', value: web3.toWei(32, 'ether'), data: '{{ item }}'})"
-  with_lines: cat /home/{{prysm_user}}/depositdata
+    msg: "docker exec -it geth geth attach {{ geth_connection }} --exec=\"eth.sendTransaction({from:eth.coinbase, to:'{{ deposit_contract }}', value: web3.toWei(32, 'ether'), data: '{{ item }}'})\""
+  with_items: "{{ deposit_data.stdout.splitlines() }}"

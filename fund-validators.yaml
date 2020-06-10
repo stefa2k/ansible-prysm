@@ -3,10 +3,10 @@
   become: yes
   vars:
     prysm_user: deploy
-    deposit_contract: 0x0F0F0fc0530007361933EaB5DB97d09aCDD6C1c8
+    deposit_contract: "0x0F0F0fc0530007361933EaB5DB97d09aCDD6C1c8"
     geth_connection: http://localhost:8545/
     geth_account_password: foobar
-    geth_account: foobar
+    geth_account: "0xfoobar"
     
     
   roles:
