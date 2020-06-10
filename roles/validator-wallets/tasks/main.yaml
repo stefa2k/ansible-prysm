@@ -17,3 +17,15 @@
   loop: "{{ query('sequence', 'start=1 end='+validator_accounts) }}"
   loop_control:
     index_var: validator_idx
+
+- name: Locate validator wallet
+  command: /home/{{ prysm_user }}/go/bin/ethdo wallet info --wallet="{{ validator_wallet_name }}" --verbose
+  register: wallet_info
+
+- name: Copy validator wallet to validator's datadir
+  copy:
+    remote_src: yes
+    src: {{ item }}
+    dest: {{ prysm_install_path }}/validator/
+  with_items: "{{ wallet_info.stdout.splitlines()|select('match', '^Location')|split(' ')[1] }}"
+  

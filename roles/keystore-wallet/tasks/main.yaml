@@ -42,3 +42,6 @@
   lineinfile:
     path: /home/{{ prysm_user }}/keystoreWallet.json
     line: "]}"
+
+- name: Put keystore into place (move file)
+  command: mv /home/{{ prysm_user }}/keystoreWallet.json {{ prysm_install_path }}/validator/keystoreWallet.json

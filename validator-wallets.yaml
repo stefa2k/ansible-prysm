@@ -11,6 +11,7 @@
     validator_wallet_password: foobar
     validator_accounts_password: foobar
     validator_accounts: "10" # this must be a string!
+    prysm_install_path: /opt/prysm-docker-compose
   
   roles:
   - validator-wallets
