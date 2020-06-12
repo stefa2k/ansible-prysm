@@ -2,16 +2,8 @@
 - hosts: all
   become: yes
   become_user: deploy
-  vars:
-    prysm_user: deploy
-    withdrawal_wallet_name: wd
-    withdrawal_account_name: all
-    validator_wallet_name: v
-    validator_wallet_type: hd
-    validator_wallet_password: foobar
-    validator_accounts_password: foobar
-    validator_accounts: "10" # this must be a string!
-    prysm_install_path: /opt/prysm-docker-compose
+  vars_files:
+  - ./vars/vars.yaml
   
   roles:
   - validator-wallets

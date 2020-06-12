@@ -1,9 +1,8 @@
 ---
 - hosts: all
   become: true
-  vars:
-    prysm_user: deploy
-    prysm_install_path: /opt/prysm-docker-compose
+  vars_files:
+  - ./vars/vars.yaml
 
   roles:
   - eth2node
