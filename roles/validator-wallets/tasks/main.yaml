@@ -1,22 +1,16 @@
 ---
-- name: Create validator wallet
-  command: /home/{{ prysm_user }}/go/bin/ethdo wallet create --wallet="{{ validator_wallet_name }}" --type="{{ validator_wallet_type }}" --walletpassphrase="{{ validator_wallet_password }}"
+- name: Look up validator wallet
+  shell: /home/{{ prysm_user }}/go/bin/ethdo wallet info --wallet="{{ validator_wallet_name }}"
+  register: validator_wallet_lookup
+  ignore_errors: yes
 
-- name: Read validator wallet seed
-  command: /home/{{ prysm_user }}/go/bin/ethdo wallet seed --wallet="{{ validator_wallet_name }}" --walletpassphrase="{{ validator_wallet_password }}"
-  register: wallet_seed
-  when: validator_wallet_type == "hd"
-  
-- name: Your validator wallet seed (write it down and store it safe!)
-  debug:
-    msg: "{{ wallet_seed }}"
-  when: validator_wallet_type == "hd"
+- name: Create validator wallet
+  import_tasks: create-validator-wallet.yaml
+  when: validator_wallet_lookup.stderr != ""
 
 - name: Create validator accounts
   include_tasks: create-validator-account.yaml
   loop: "{{ query('sequence', 'start=1 end='+validator_accounts) }}"
-  loop_control:
-    index_var: validator_idx
 
 - name: Locate validator wallet
   command: /home/{{ prysm_user }}/go/bin/ethdo wallet info --wallet="{{ validator_wallet_name }}" --verbose
