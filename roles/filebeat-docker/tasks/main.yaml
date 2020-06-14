@@ -5,3 +5,5 @@
 - name: Install filebeat
   shell: dpkg -i filebeat-7.7.1-amd64.deb
 
+- name: Remove .deb
+  shell: rm filebeat-7.7.1-amd64.deb
