@@ -9,35 +9,27 @@
 
 - name: ufw allow filebeat from specific ips
   ufw:
-    direction: incoming
-    policy: allow
+    rule: allow
     port: 5044
-    proto: tcp
     src: "{{ item }}"
   with_items: "{{ filebeat_src }}"
     
 - name: ufw deny filebeat from all other ips
   ufw:
-    direction: incoming
-    policy: deny
+    rule: deny
     port: 5044
-    proto: tcp
 
 - name: ufw allow kibana from specific ips
   ufw:
-    direction: incoming
-    policy: allow
+    rule: allow
     port: 5601
-    proto: tcp
     src: "{{ item }}"
   with_items: "{{ kibana_src }}"
 
 - name: ufw deny kibana from all other ips
   ufw:
-    direction: incoming
-    policy: deny
+    rule: deny
     port: 5601
-    proto: tcp
 
 - name: Clone docker-elk
   git:
