@@ -1,0 +1,14 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    elk_user: deploy
+    elk_install_path: /opt/docker-elk
+    filebeat_src:
+    - node.1.ip
+    - node.2.ip
+    kibana_src:
+    - your.private.ip.or.domain
+  
+  roles:
+  - elknode

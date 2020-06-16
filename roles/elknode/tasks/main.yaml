@@ -1,0 +1,62 @@
+---
+- name: ufw allow filebeat from specific ips
+  ufw:
+    direction: incoming
+    policy: allow
+    port: 5044
+    proto: tcp
+    src: "{{ item }}"
+  with_items: "{{ filebeat_src }}"
+    
+- name: ufw deny filebeat from all other ips
+  ufw:
+    direction: incoming
+    policy: deny
+    port: 5044
+    proto: tcp
+
+- name: ufw allow kibana from specific ips
+  ufw:
+    direction: incoming
+    policy: allow
+    port: 5601
+    proto: tcp
+    src: "{{ item }}"
+  with_items: "{{ kibana_src }}"
+
+- name: ufw deny kibana from all other ips
+  ufw:
+    direction: incoming
+    policy: deny
+    port: 5601
+    proto: tcp
+
+- name: Clone docker-elk
+  git:
+    repo: "https://github.com/stefa2k/docker-elk"
+    dest: "{{ elk_install_path }}"
+
+- name: Change file ownership and group of clone
+  file:
+    state: directory
+    path: "{{ elk_install_path }}"
+    owner: "{{ elk_user }}"
+    group: "{{ elk_user }}"
+    recurse: yes
+
+- name: Configure logstash filter
+  blockinfile:
+    path: "{{ elk_install_path }}/config/logstash/pipeline/logstash.conf"
+    backup: yes
+    insertafter: "\#\# Add your filters / logstash plugins configuration here"
+    block: |
+      filter {
+        kv {
+          source => "message"
+        }
+      }
+
+- name: Start ELK
+  command: docker-compose up -d
+  args:
+    chdir: "{{ elk_install_path }}"
