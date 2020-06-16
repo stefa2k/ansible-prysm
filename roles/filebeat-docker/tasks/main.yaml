@@ -1,9 +1,54 @@
 ---
 - name: Download filebeat
-  shell: curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.7.1-amd64.deb
+  shell: "curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-{{ filebeat_version }}-amd64.deb"
 
 - name: Install filebeat
-  shell: dpkg -i filebeat-7.7.1-amd64.deb
+  shell: "dpkg -i filebeat-{{ filebeat_version }}-amd64.deb"
 
 - name: Remove .deb
-  shell: rm filebeat-7.7.1-amd64.deb
+  shell: "rm filebeat-{{ filebeat_version }}-amd64.deb"
+
+- name: filebeat.yml - add input for docker
+  blockinfile:
+    path: "{{ filebeat_yml }}"
+    backup: yes
+    insertafter: "filebeat.inputs:"
+    block: |2
+      - type: container
+        enabled: true
+        paths:
+        - '/var/lib/docker/containers/*/*.log'
+
+- name: filebeat.yml - remove elasticsearch output
+  lineinfile:
+    path: "{{ filebeat_yml }}"
+    regexp: '^output\.elasticsearch'
+    line: "#output.elasticsearch:"
+
+- name: filebeat.yml - remove elasticsearch hosts
+  lineinfile:
+    path: "{{ filebeat_yml }}"
+    regexp: '^  hosts\: \[\"localhost:9200\"\]'
+    line: "  #hosts: [\"localhost:9200\"]"
+
+- name: filebeat.yml - add logstash output
+  lineinfile:
+    path: "{{ filebeat_yml }}"
+    regexp: '^\#output\.logstash:'
+    line: "output.logstash:"
+
+- name: filebeat.yml - add logstash host
+  lineinfile:
+    path: "{{ filebeat_yml }}"
+    regexp: '^  \#hosts\: \[\"localhost:5044\"\]'
+    line: "  hosts: [\"{{ filebeat_connection }}\"]"
+
+- name: Enable service filebeat
+  systemd:
+    name: filebeat
+    enabled: yes
+
+- name: Start service filebeat
+  systemd:
+    name: filebeat
+    state: started
