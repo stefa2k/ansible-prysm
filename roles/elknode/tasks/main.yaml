@@ -1,4 +1,12 @@
 ---
+- name: Install required system packages
+  apt: 
+    name: "{{ item }}" 
+    state: latest 
+    update_cache: yes
+  loop: 
+  - git
+
 - name: ufw allow filebeat from specific ips
   ufw:
     direction: incoming
@@ -48,7 +56,7 @@
   blockinfile:
     path: "{{ elk_install_path }}/config/logstash/pipeline/logstash.conf"
     backup: yes
-    insertafter: "\#\# Add your filters / logstash plugins configuration here"
+    insertafter: "## Add your filters / logstash plugins configuration here"
     block: |
       filter {
         kv {
