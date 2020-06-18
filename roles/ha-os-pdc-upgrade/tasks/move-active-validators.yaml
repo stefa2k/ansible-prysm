@@ -1,4 +1,13 @@
 ---
+- name: Install required system packages
+  apt: 
+    name: "{{ item }}" 
+    state: latest 
+    update_cache: yes
+  loop: 
+  - unzip
+  - zip
+
 - name: src-host - Zip validator's datadir
   archive:
     path: "{{ prysm_install_path }}/validator"
