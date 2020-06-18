@@ -1,0 +1,43 @@
+---
+- name: src-host: Zip validator's datadir
+  archive:
+    path: "{{ prysm_install_path }}/validator"
+    dest: "{{ prysm_install_path }}/valiator.zip"
+    format: zip
+  when: inventory_hostname == 'to_upgrade'
+
+- name: src-host: Copy validator's zipped datadir
+  fetch:
+    src: "{{ prysm_install_path }}/validator.zip"
+    dest: "{{ lookup('file', ha_upgrade_tmp_files+'/validator.zip') }}"
+    flat: yes
+  when: inventory_hostname == 'to_upgrade'
+
+- name: src-host: Copy validator's config file
+  fetch:
+    src: "{{ prysm_install_path }}/config/validator-wallet.yaml"
+    dest: "{{ lookup('file', ha_upgrade_tmp_files+'/validator-wallet.yaml') }}"
+    flat: yes
+  when: inventory_hostname == 'to_upgrade'
+
+- name: dest-host: Copy validator's config file
+  copy:
+    src: "{{ lookup('file', ha_upgrade_tmp_files+'/validator-wallet.yaml') }}"
+    dest: "{{ prysm_install_path }}/config/validator-wallet.yaml"
+  when: inventory_hostname == 'backup'
+
+- name: dest-host: Copy validator's zipped datadir
+  copy:
+    src: "{{ lookup('file', ha_upgrade_tmp_files+'/validator.zip') }}"
+    dest: "{{ prysm_install_path }}/validator.zip"
+  when: inventory_hostname == 'backup'
+
+- name: dest-host: Zip validator's datadir
+  unarchive:
+    src: "{{ prysm_install_path }}/valiator.zip"
+    dest: "{{ prysm_install_path }}/validator"
+    remote_src: yes
+  when: inventory_hostname == 'backup'
+
+
+
