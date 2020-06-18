@@ -16,4 +16,6 @@ geth_connection: http://localhost:8545/
 geth_account_password: foobar
 geth_account: "0xfoobar"
 
+filebeat_connection: localhost:5044
+
 ha_upgrade_tmp_files: files
