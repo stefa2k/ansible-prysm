@@ -1,4 +1,5 @@
 ---
+### Move files
 - name: Install required system packages
   apt: 
     name: "{{ item }}" 
@@ -48,5 +49,35 @@
     remote_src: yes
   when: inventory_hostname == 'backup'
 
+### Switch validator
+- name: dest-host - Check on beacon node (fully synced)
+  shell: "docker-compose logs --tail=10 beacon"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  register: beacon_sync
+  until: beacon_sync.stdout|regex_findall('Synced new block')|length > 0
+  retries: 60 # a minute
+  delay: 1
+  when: inventory_hostname == 'backup'
 
+- name: dest-host - (Re)Start validators
+  shell: "docker-compose stop validator && docker-compose up -d validator"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  when: inventory_hostname == 'backup'
 
+- name: dest-host - Check on validator (staking)
+  shell: "docker-compose logs --tail=10 validator"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  register: validator_logs
+  until: validator_logs.stdout|regex_findall('Validating for public key')|length > 0
+  retries: 300 # 5 minutes
+  delay: 1
+  when: inventory_hostname == 'backup'
+
+- name: src-host - Shut down validator
+  shell: "docker-compose stop validator"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  when: inventory_hostname == 'to_upgrade'
