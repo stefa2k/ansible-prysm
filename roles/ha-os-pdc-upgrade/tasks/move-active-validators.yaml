@@ -67,11 +67,14 @@
   when: inventory_hostname == 'backup'
 
 - name: dest-host - Check on validator (staking)
-  shell: "docker-compose logs --tail=10 validator"
+  shell: "docker-compose logs --tail=4 validator"
   args:
     chdir: "{{ prysm_install_path }}"
   register: validator_logs
-  until: validator_logs.stdout|regex_findall('Validating for public key')|length > 0
+  until: >
+    validator_logs.stdout|regex_findall('Validating for public key')|length > 0 or
+    validator_logs.stdout|regex_findall('Attestation schedule')|length > 0 or
+    validator_logs.stdout|regex_findall('Submitted new attestations')|length > 0
   retries: 300 # 5 minutes
   delay: 1
   when: inventory_hostname == 'backup'
