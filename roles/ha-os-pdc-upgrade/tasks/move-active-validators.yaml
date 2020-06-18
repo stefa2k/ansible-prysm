@@ -44,7 +44,7 @@
 - name: dest-host - Zip validator's datadir
   unarchive:
     src: "{{ prysm_install_path }}/validator.zip"
-    dest: "{{ prysm_install_path }}/validator"
+    dest: "{{ prysm_install_path }}"
     remote_src: yes
   when: inventory_hostname == 'backup'
 
