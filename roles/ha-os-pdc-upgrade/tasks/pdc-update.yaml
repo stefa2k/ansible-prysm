@@ -21,6 +21,7 @@
   git:
     repo: "https://github.com/stefa2k/prysm-docker-compose"
     dest: "{{ prysm_install_path }}"
+    force: yes
   register: pull_result
   when: inventory_hostname == 'to_upgrade'
 
