@@ -28,4 +28,4 @@
 - name: src-host - Git result
   debug:
     msg: "{{ pull_result.stdout }}"
-  when: inventory_hostname == 'to_upgrade'
+  when: inventory_hostname == 'to_upgrade' and pull_result.stdout is defined
