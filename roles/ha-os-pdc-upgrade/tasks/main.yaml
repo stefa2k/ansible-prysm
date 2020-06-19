@@ -1,3 +1,15 @@
 ---
 - name: Move active validators to backup host
   include_tasks: move-active-validators.yaml
+
+- name: Perform OS upgrade
+  include_tasks: os-upgrade.yaml
+
+- name: Perform ethdo update
+  include_tasks: ethdo-update.yaml
+
+- name: Perform prysm-docker-compose update
+  include_tasks: pdc-update.yaml
+
+- name: Switch validators back to upgraded host
+  include_tasks: reactivate-original-validators.yaml

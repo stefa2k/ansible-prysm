@@ -1,0 +1,21 @@
+---
+- name: src-host - Update APT package cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  when: inventory_hostname == 'to_upgrade'
+
+- name: src-host - Upgrade APT to the latest packages
+  apt:
+    upgrade: "yes"
+  when: inventory_hostname == 'to_upgrade'
+
+- name: src-host - Update all packages to the latest version
+  apt:
+    upgrade: dist
+  when: inventory_hostname == 'to_upgrade'
+
+- name: src-host - Reboot host
+  reboot:
+    reboot_timeout: 600
+  when: inventory_hostname == 'to_upgrade'

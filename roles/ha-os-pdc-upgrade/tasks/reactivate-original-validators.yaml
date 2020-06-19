@@ -1,0 +1,43 @@
+---
+- name: src-host - Start prysm-docker-compose except validator
+  shell: "docker-compose up -d geth beacon prometheus grafana"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  when: inventory_hostname == 'to_upgrade'
+
+# wait for beacon to sync
+- name: src-host - Check on beacon node (fully synced)
+  shell: "docker-compose logs --tail=10 beacon"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  register: beacon_logs
+  until: beacon_logs.stdout|regex_findall('Synced new block')|length > 0
+  retries: 900 # 15 minutes
+  delay: 1
+  when: inventory_hostname == 'to_upgrade'
+
+# start validator
+- name: src-host - (Re)Start validators
+  shell: "docker-compose stop validator && docker-compose up -d validator"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  when: inventory_hostname == 'to_upgrade'
+
+- name: src-host - Check on validator (staking)
+  shell: "docker-compose logs --tail=4 validator"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  register: validator_logs
+  until: >
+    validator_logs.stdout|regex_findall('Validating for public key')|length > 0 or
+    validator_logs.stdout|regex_findall('Attestation schedule')|length > 0 or
+    validator_logs.stdout|regex_findall('Submitted new attestations')|length > 0
+  retries: 300 # 5 minutes
+  delay: 1
+  when: inventory_hostname == 'to_upgrade'
+
+- name: dest-host - Shut down validator
+  shell: "docker-compose stop validator"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  when: inventory_hostname == 'backup'

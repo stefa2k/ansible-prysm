@@ -1,0 +1,30 @@
+---
+- name: src-host - Shut down prysm-docker-compose
+  shell: "docker-compose down"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  when: inventory_hostname == 'to_upgrade'
+
+- name: src-host - Get current branch
+  shell: "git rev-parse --abbrev-ref HEAD"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  register: current_branch
+  when: inventory_hostname == 'to_upgrade'
+  
+- name: src-host - You are not on master branch!
+  debug:
+    msg: You are not on master branch, but on this branch: {{ current_branch.stdout }}"
+  when: inventory_hostname == 'to_upgrade' and current_branch.stdout != 'master'
+
+- name: src-host - Pull prysm-docker-compose
+  git:
+    repo: "https://github.com/stefa2k/prysm-docker-compose"
+    dest: "{{ prysm_install_path }}"
+  register: pull_result
+  when: inventory_hostname == 'to_upgrade'
+
+- name: src-host - Git result
+  debug:
+    msg: {{ pull_result.stdout }}
+  when: inventory_hostname == 'to_upgrade'

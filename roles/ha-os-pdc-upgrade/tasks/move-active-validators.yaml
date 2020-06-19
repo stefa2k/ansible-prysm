@@ -23,6 +23,12 @@
     flat: yes
   when: inventory_hostname == 'to_upgrade'
 
+- name: src-host - Remove validator's zipped datadir
+  file:
+    path: "{{ prysm_install_path }}/validator.zip"
+    state: absent
+  when: inventory_hostname == 'to_upgrade'
+
 - name: src-host - Copy validator's config file
   fetch:
     src: "{{ prysm_install_path }}/config/validator-wallet.yaml"
@@ -42,11 +48,17 @@
     dest: "{{ prysm_install_path }}/validator.zip"
   when: inventory_hostname == 'backup'
 
-- name: dest-host - Zip validator's datadir
+- name: dest-host - Unzip validator's datadir
   unarchive:
     src: "{{ prysm_install_path }}/validator.zip"
     dest: "{{ prysm_install_path }}"
     remote_src: yes
+  when: inventory_hostname == 'backup'
+
+- name: src-host - Remove validator's zipped datadir
+  file:
+    path: "{{ prysm_install_path }}/validator.zip"
+    state: absent
   when: inventory_hostname == 'backup'
 
 ### Switch validator
