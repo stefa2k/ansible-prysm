@@ -26,5 +26,5 @@
 
 - name: src-host - Git result
   debug:
-    msg: {{ pull_result.stdout }}
+    msg: "{{ pull_result.stdout }}"
   when: inventory_hostname == 'to_upgrade'
