@@ -25,7 +25,32 @@
   register: pull_result
   when: inventory_hostname == 'to_upgrade'
 
-- name: src-host - Git result
+- name: src-host - git stash (save changes)
+  shell: "git stash"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  when: inventory_hostname == 'to_upgrade'
+
+- name: src-host - Pull git
+  shell: "git pull"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  register: pull_result
+  when: inventory_hostname == 'to_upgrade'
+
+- name: src-host - Git pull result
   debug:
     msg: "{{ pull_result.stdout }}"
-  when: inventory_hostname == 'to_upgrade' and pull_result.stdout is defined
+  when: inventory_hostname == 'to_upgrade'
+
+- name: src-host - Pop stash
+  shell: "git stash pop"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  register: pop_result
+  when: inventory_hostname == 'to_upgrade'
+
+- name: src-host - Git pull result
+  debug:
+    msg: "{{ pop_result.stdout }}"
+  when: inventory_hostname == 'to_upgrade'
