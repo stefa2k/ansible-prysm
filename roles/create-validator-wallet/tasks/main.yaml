@@ -1,0 +1,9 @@
+---
+- name: Look up validator wallet
+  shell: /home/{{ prysm_user }}/go/bin/ethdo wallet info --wallet="{{ validator_wallet_name }}"
+  register: validator_wallet_lookup
+  ignore_errors: yes
+
+- name: Create validator wallet
+  import_tasks: create-validator-wallet.yaml
+  when: validator_wallet_lookup.stderr != ""
