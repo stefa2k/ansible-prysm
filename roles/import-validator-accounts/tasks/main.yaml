@@ -1,0 +1,4 @@
+---
+- name: Import key(s) into wallet
+  shell: /home/{{ prysm_user }}/go/bin/ethdo account import --account="{{ validator_wallet_name }}/{{ item.account_name }}" --key="{{ item.key }}" --passphrase="{{ item.passphrase }}"
+  with_items: "{{ validator_accounts_to_import }}"
