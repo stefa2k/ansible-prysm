@@ -4,6 +4,7 @@
   become_user: {{ prysm_user }}
   vars_files:
   - ./vars/vars.yaml
+  - ./vars/validator-accounts-to-import.yaml
   
   roles:
   - create-validator-wallet

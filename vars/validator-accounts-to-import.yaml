@@ -1,0 +1,3 @@
+validator_accounts_to_import:
+  - { account_name: "acc1", passphrase: "foobar", key: "" }
+  - { account_name: "acc2", passphrase: "foobar", key: "" }
