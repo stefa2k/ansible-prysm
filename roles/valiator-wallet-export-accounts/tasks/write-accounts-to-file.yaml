@@ -7,4 +7,4 @@
   lineinfile:
     path: /home/{{ prysm_user }}/accountsexport
     create: yes
-    line: "- { account_name: '{{ item }}', passphrase: 'validator_accounts_password', key: '{{ valiator_accounts.stdout }}' }"
+    line: "- { account_name: '{{ item }}', passphrase: '{{ validator_accounts_password }}', key: '{{ valiator_accounts.stdout }}' }"
