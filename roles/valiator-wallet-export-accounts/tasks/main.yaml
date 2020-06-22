@@ -1,0 +1,8 @@
+---
+- name: Gather account names
+  command: /home/{{ prysm_user }}/go/bin/ethdo wallet accounts --wallet="{{ validator_wallet_name }}"
+  register: valiator_accounts
+
+- name: Write accounts to file
+  include_tasks: write-accounts-to-file.yaml
+  with_items: "{{ valiator_accounts.stdout.splitlines() }}"

@@ -1,0 +1,10 @@
+---
+- name: Fetch key of account
+  shell: /home/{{ prysm_user }}/go/bin/ethdo account key --account="{{ validator_wallet_name }}/{{ item }}" --passphrase="{{ validator_accounts_password }}"
+  register: valiator_accounts
+
+- name: Write account to file
+  lineinfile:
+    path: /home/{{ prysm_user }}/accountsexport
+    create: yes
+    line: "- { account_name: '{{ item }}', passphrase: 'validator_accounts_password', key: '{{ valiator_accounts.stdout }} }'
