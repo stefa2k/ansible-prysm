@@ -44,10 +44,11 @@
     line: "]}"
 
 - name: Put keystore into place (move file)
-  command: mv /home/{{ prysm_user }}/keystoreWallet.json {{ prysm_install_path }}/validator/keystoreWallet.json
+  shell: mv /home/{{ prysm_user }}/keystoreWallet.json {{ prysm_install_path }}/validator/keystoreWallet.json
 
 - name: Adapt docker-compose.yaml to use config file for keystoreWallet.json
   lineinfile:
     path: "{{ prysm_install_path }}/docker-compose.yaml"
-    regexp: "\-\s\.\/config\/validator\.yaml\:\/config\/validator\.yaml"
+    regexp: "\\-\\s\\.\\/config\\/validator\\.yaml\\:\\/config\\/validator\\.yaml"
     line: "                        - ./config/validator-wallet.yaml:/config/validator.yaml:ro"
+    backrefs: yes
