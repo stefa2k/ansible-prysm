@@ -45,5 +45,5 @@
 
 - name: src-host - Check for errors by pop
   fail:
-    msg: "There are not expected errors: {{ pop_result }}"
-  when: inventory_hostname == 'to_upgrade' and pull_result.stderr != "No stash entries found." and pull_result.stderr|length > 0
+    msg: "There are unexpected errors: {{ pop_result }}"
+  when: inventory_hostname == 'to_upgrade' and pop_result.failed
