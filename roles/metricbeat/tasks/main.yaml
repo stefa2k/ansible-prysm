@@ -1,0 +1,31 @@
+---
+- name: Download metricbeat
+  shell: "curl -L -O https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-{{ metricbeat_version }}-amd64.deb"
+
+- name: Install metricbeat
+  shell: "dpkg -i metricbeat-{{ metricbeat_version }}-amd64.deb"
+
+- name: Remove .deb
+  shell: "rm metricbeat-{{ metricbeat_version }}-amd64.deb"
+
+- name: metricbeat.yml - remove elasticsearch localhost
+  lineinfile:
+    path: "{{ metricbeat_yml }}"
+    regexp: '^  hosts\: \[\"localhost:9200\"\]'
+    line: "  #hosts: [\"localhost:9200\"]"
+
+- name: metricbeat.yml - add elasticsearch host
+  lineinfile:
+    path: "{{ metricbeat_yml }}"
+    regexp: '^  \#hosts\: \[\"localhost:9200\"\]'
+    line: "  hosts: [\"{{ metricbeat_connection }}\"]"
+
+- name: Enable service metricbeat
+  systemd:
+    name: metricbeat
+    enabled: yes
+
+- name: Start service metricbeat
+  systemd:
+    name: metricbeat
+    state: started
