@@ -3,16 +3,16 @@
   template:
     src: haproxy.cfg.j2
     dest: "{{ prysm_install_path }}/config/ha/haproxy.cfg"
-    owner: deploy
-    group: deploy
+    owner: "{{ prysm_user }}"
+    group: "{{ prysm_user }}"
     mode: 0644
 
 - name: Generate docker-compose overrice file
   template:
     src: docker-compose.override.yaml.j2
     dest: "{{ prysm_install_path }}/docker-compose.override.yaml"
-    owner: deploy
-    group: deploy
+    owner: "{{ prysm_user }}"
+    group: "{{ prysm_user }}"
     mode: 0644
 
 - name: Configure correct IP address for node
