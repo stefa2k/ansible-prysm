@@ -1,0 +1,16 @@
+---
+- name: Generate HAProxy configuration file
+  template:
+    src: haproxy.cfg.j2
+    dest: "{{ prysm_install_path }}/config/ha/haproxy.cfg"
+    owner: deploy
+    group: deploy
+    mode: 0644
+
+- name: Generate docker-compose overrice file
+  template:
+    src: docker-compose.override.yaml.j2
+    dest: "{{ prysm_install_path }}/docker-compose.override.yaml"
+    owner: deploy
+    group: deploy
+    mode: 0644

@@ -1,0 +1,57 @@
+version: "3.7"
+
+x-disabled-service:
+        &disabled-service
+                image: tianon/true
+                restart: "no"
+                command: ""
+                entrypoint: ""
+
+services:
+        geth:
+                ports:
+				        - 30303:30303/tcp
+						- 30303:30303/upd
+						- {{hostvars[inventory_hostname].eth2node_ha_ip}}:8545:8545
+						- 127.0.0.1:8545:8545
+        beacon:
+		        depends_on:
+				        - haproxy
+		        ports:
+				        - 12000:12000/udp
+						- 13000:13000/tcp
+						- {{hostvars[inventory_hostname].eth2node_ha_ip}}:3500:3500
+						- {{hostvars[inventory_hostname].eth2node_ha_ip}}:4000:4000
+						- 127.0.0.1:4000:4000
+						
+                volumes:
+                        - ./config/ha/beacon.yaml:/config/beacon.yaml:ro
+                        - ./beacon:/data
+		validator:
+		        depends_on:
+				        - haproxy
+		        volumes:
+				        - ./config/ha/validator-wallet.yaml:/config/validator.yaml:ro
+                        - ./validator:/data
+        slasher:
+                depends_on:
+				        - haproxy
+				ports:
+				        - {{hostvars[inventory_hostname].eth2node_ha_ip}}:4002:4002
+				volumes:
+                        - ./config/ha/slasher.yaml:/config/slasher.yaml:ro
+                        - ./slasher:/data
+        prometheus:
+                <<: *disabled-service
+        grafana:
+                <<: *disabled-service
+		haproxy:
+                container_name: haproxy
+                image: haproxy:2.1-alpine
+                restart: always
+                hostname: haproxy
+                ports:
+                        - 127.0.0.1:80:80
+						- {{hostvars[inventory_hostname].eth2node_ha_ip}}:80:80
+                volumes:
+                        - ./config/ha/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
