@@ -11,7 +11,7 @@ services:
         geth:
                 ports:
                         - 30303:30303/tcp
-                        - 30303:30303/upd
+                        - 30303:30303/udp
                         - {{hostvars[inventory_hostname].eth2node_ha_ip}}:8545:8545
                         - 127.0.0.1:8545:8545
         beacon:
@@ -51,7 +51,7 @@ services:
                 restart: always
                 hostname: haproxy
                 ports:
-                        - 127.0.0.1:80:80
                         - {{hostvars[inventory_hostname].eth2node_ha_ip}}:80:80
+                        - 127.0.0.1:80:80
                 volumes:
                         - ./config/ha/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
