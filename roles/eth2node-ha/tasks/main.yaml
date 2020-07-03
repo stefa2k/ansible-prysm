@@ -14,3 +14,19 @@
     owner: deploy
     group: deploy
     mode: 0644
+
+- name: Configure correct IP address for node
+  lineinfile:
+    path: "{{ prysm_install_path }}/config/ha/beacon.yaml"
+    regexp: '^p2p-host-ip: '
+    line: 'p2p-host-ip: {{ ansible_default_ipv4.address }}'
+
+- name: Stop services
+  shell: docker-compose down
+  args:
+    chdir: "{{ prysm_install_path }}"
+
+- name: Start serivces (except validator)
+  command: docker-compose up -d geth beacon slasher haproxy
+  args:
+    chdir: "{{ prysm_install_path }}"
