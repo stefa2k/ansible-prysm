@@ -17,6 +17,7 @@ services:
                 ports:
                         - {{hostvars[inventory_hostname].eth2node_ha_ip}}:3500:3500
                         - {{hostvars[inventory_hostname].eth2node_ha_ip}}:4000:4000
+						- {{hostvars[inventory_hostname].eth2node_ha_ip}}:8480:8480
                 volumes:
                         - ./config/ha/beacon.yaml:/config/beacon.yaml:ro
         validator:
