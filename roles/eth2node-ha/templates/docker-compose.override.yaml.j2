@@ -30,6 +30,7 @@ services:
                         - haproxy
                 ports:
                         - {{hostvars[inventory_hostname].eth2node_ha_ip}}:4002:4002
+                        - {{hostvars[inventory_hostname].eth2node_ha_ip}}:8680:8680
                 volumes:
                         - ./config/ha/slasher.yaml:/config/slasher.yaml:ro
         prometheus:
