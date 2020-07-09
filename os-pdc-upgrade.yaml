@@ -11,4 +11,4 @@
     - haproxy
   
   roles:
-  - ha-os-pdc-upgrade
+  - os-pdc-upgrade
