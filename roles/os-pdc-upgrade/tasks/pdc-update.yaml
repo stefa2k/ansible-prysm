@@ -1,0 +1,42 @@
+---
+- name: src-host - Shut down prysm-docker-compose
+  shell: "docker-compose down"
+  args:
+    chdir: "{{ prysm_install_path }}"
+
+- name: src-host - Get current branch
+  shell: "git rev-parse --abbrev-ref HEAD"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  register: current_branch
+  
+- name: src-host - You are not on master branch!
+  debug:
+    msg: "You are not on master branch, but on this branch {{ current_branch.stdout }}"
+  when: inventory_hostname == 'to_upgrade' and current_branch.stdout != 'master'
+
+- name: src-host - git stash (save changes)
+  shell: "git stash"
+  args:
+    chdir: "{{ prysm_install_path }}"
+
+- name: src-host - Pull git
+  shell: "git pull"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  register: pull_result
+
+- name: src-host - Git pull result
+  debug:
+    msg: "{{ pull_result.stdout }}"
+
+- name: src-host - Pop stash
+  shell: "git stash pop"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  register: pop_result
+  ignore_errors: yes
+
+- name: src-host - Check for errors by pop
+  fail:
+    msg: "There are unexpected errors: {{ pop_result }}"

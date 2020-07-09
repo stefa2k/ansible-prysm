@@ -1,0 +1,34 @@
+---
+- name: src-host - Start prysm-docker-compose except validator
+  shell: "docker-compose up -d {{ item }}"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  with_items: "{{ starting_containers }}"
+
+- name: src-host - Check on beacon node (fully synced)
+  shell: "docker-compose logs --tail=10 beacon"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  register: beacon_logs
+  until: beacon_logs.stdout|regex_findall('Synced new block')|length > 0
+  retries: 900 # 15 minutes
+  delay: 1
+
+- name: src-host - Start validators
+  shell: "docker-compose stop validator && docker-compose up -d validator"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  when: hostvars[inventory_hostname].starting_validator
+
+- name: src-host - Check on validator (staking)
+  shell: "docker-compose logs --tail=4 validator"
+  args:
+    chdir: "{{ prysm_install_path }}"
+  register: validator_logs
+  until: >
+    validator_logs.stdout|regex_findall('Validating for public key')|length > 0 or
+    validator_logs.stdout|regex_findall('Attestation schedule')|length > 0 or
+    validator_logs.stdout|regex_findall('Submitted new attestations')|length > 0
+  retries: 600 # 10 minutes
+  delay: 1
+  when: hostvars[inventory_hostname].starting_validator
