@@ -40,3 +40,4 @@
 - name: src-host - Check for errors by pop
   fail:
     msg: "There are unexpected errors: {{ pop_result }}"
+  when: pop_result.failed
