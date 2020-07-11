@@ -51,7 +51,7 @@
 - name: filebeat.yml - remove previously defined hosts
   lineinfile:
     path: "{{ filebeat_yml }}"
-    regexp: '^ *.hosts:'
+    regexp: '^ *hosts:'
     state: absent
   notify: Restart filebeat
 
