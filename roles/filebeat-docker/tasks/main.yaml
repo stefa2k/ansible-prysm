@@ -37,11 +37,18 @@
     regexp: '^\#output\.logstash:'
     line: "output.logstash:"
 
-- name: filebeat.yml - add logstash host
+- name: filebeat.yml - remove previously defined hosts
   lineinfile:
     path: "{{ filebeat_yml }}"
-    regexp: '^  \#hosts\: \[\"localhost:5044\"\]'
-    line: "  hosts: [\"{{ filebeat_connection }}\"]"
+    regexp: '^ *.hosts:'
+    state: absent
+
+- name: filebeat.yml - add logstash hosts
+  lineinfile:
+    path: "{{ filebeat_yml }}"
+    insertafter: "output.logstash:"
+    line: "  hosts: [\"{{ item }}\"]"
+  with_items: "{{ filebeat_connections }}"
 
 - name: Enable service filebeat
   systemd:
