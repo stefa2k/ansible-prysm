@@ -8,11 +8,10 @@
     - build-essential
     - gcc
     - golang
+  become: yes
 
 - name: Install ethdo
   shell: GO111MODULE=on go get github.com/wealdtech/ethdo
-  become: yes
-  become_user: "{{ prysm_user }}"
 
 - name: Add ethdo to PATH
   blockinfile:
@@ -21,5 +20,3 @@
       if [ -d "$HOME/go/bin" ] ; then
         PATH="$PATH:$HOME/go/bin"
       fi
-  become: yes
-  become_user: "{{ prysm_user }}"

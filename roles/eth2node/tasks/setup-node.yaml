@@ -7,11 +7,13 @@
   loop:
   - git
   - vim
+  become: yes
 
 - name: Clone Ethereum 2.0 docker compose setup
   git:
     repo: "https://github.com/stefa2k/prysm-docker-compose"
     dest: "{{ prysm_install_path }}"
+  become: yes
 
 - name: Change file ownership and group of clone
   file:
@@ -20,6 +22,7 @@
     owner: "{{ prysm_user }}"
     group: "{{ prysm_user }}"
     recurse: yes
+  become: yes
 
 - name: Configure correct IP address for node
   lineinfile:
