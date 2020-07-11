@@ -1,12 +1,19 @@
 ---
+- name: Populate service facts
+  service_facts:
+
 - name: Download filebeat
   shell: "curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-{{ filebeat_version }}-amd64.deb"
+  when: 'filebeat.service' not in ansible_facts.services
 
 - name: Install filebeat
   shell: "dpkg -i filebeat-{{ filebeat_version }}-amd64.deb"
+  notify: Restart filebeat
+  when: 'filebeat.service' not in ansible_facts.services
 
 - name: Remove .deb
   shell: "rm filebeat-{{ filebeat_version }}-amd64.deb"
+  when: 'filebeat.service' not in ansible_facts.services
 
 - name: filebeat.yml - add input for docker
   blockinfile:
@@ -18,30 +25,35 @@
         enabled: true
         paths:
         - '/var/lib/docker/containers/*/*.log'
+  notify: Restart filebeat
 
 - name: filebeat.yml - remove elasticsearch output
   lineinfile:
     path: "{{ filebeat_yml }}"
     regexp: '^output\.elasticsearch'
     line: "#output.elasticsearch:"
+  notify: Restart filebeat
 
 - name: filebeat.yml - remove elasticsearch hosts
   lineinfile:
     path: "{{ filebeat_yml }}"
     regexp: '^  hosts\: \[\"localhost:9200\"\]'
     line: "  #hosts: [\"localhost:9200\"]"
+  notify: Restart filebeat
 
 - name: filebeat.yml - add logstash output
   lineinfile:
     path: "{{ filebeat_yml }}"
     regexp: '^\#output\.logstash:'
     line: "output.logstash:"
+  notify: Restart filebeat
 
 - name: filebeat.yml - remove previously defined hosts
   lineinfile:
     path: "{{ filebeat_yml }}"
     regexp: '^ *.hosts:'
     state: absent
+  notify: Restart filebeat
 
 - name: filebeat.yml - add logstash hosts
   lineinfile:
@@ -49,13 +61,4 @@
     insertafter: "output.logstash:"
     line: "  hosts: [\"{{ item }}\"]"
   with_items: "{{ filebeat_connections }}"
-
-- name: Enable service filebeat
-  systemd:
-    name: filebeat
-    enabled: yes
-
-- name: Start service filebeat
-  systemd:
-    name: filebeat
-    state: started
+  notify: Restart filebeat

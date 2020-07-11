@@ -8,3 +8,11 @@
   
   roles:
   - filebeat-docker
+  
+  handlers:
+  - name: Restart filebeat
+    service: 
+      name: filebeat
+      enabled: yes
+      state: restarted
+
