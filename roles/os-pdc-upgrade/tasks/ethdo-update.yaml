@@ -1,5 +1,3 @@
 ---
 - name: src-host - Update ethdo
   shell: GO111MODULE=on go get github.com/wealdtech/ethdo
-  become: yes
-  become_user: "{{ prysm_user }}"
