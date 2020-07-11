@@ -1,31 +1,32 @@
 ---
+- name: Populate service facts
+  service_facts:
+
 - name: Download metricbeat
   shell: "curl -L -O https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-{{ metricbeat_version }}-amd64.deb"
+  notify: Restart metricbeat
+  when: '"metricbeat.service" not in ansible_facts.services'
 
 - name: Install metricbeat
   shell: "dpkg -i metricbeat-{{ metricbeat_version }}-amd64.deb"
+  notify: Restart metricbeat
+  when: '"metricbeat.service" not in ansible_facts.services'
 
 - name: Remove .deb
   shell: "rm metricbeat-{{ metricbeat_version }}-amd64.deb"
+  notify: Restart metricbeat
+  when: '"metricbeat.service" not in ansible_facts.services'
 
-- name: metricbeat.yml - remove elasticsearch localhost
+- name: metricbeat.yml - remove previously configured elasticsearch hosts
   lineinfile:
     path: "{{ metricbeat_yml }}"
-    regexp: '^  hosts\: \[\"localhost:9200\"\]'
-    line: "  #hosts: [\"localhost:9200\"]"
+    regexp: '^ *hosts:'
+    state: absent
+  notify: Restart metricbeat
 
 - name: metricbeat.yml - add elasticsearch host
   lineinfile:
     path: "{{ metricbeat_yml }}"
-    regexp: '^  \#hosts\: \[\"localhost:9200\"\]'
+    insertafter: "output.elasticsearch:"
     line: "  hosts: [\"{{ metricbeat_connection }}\"]"
-
-- name: Enable service metricbeat
-  systemd:
-    name: metricbeat
-    enabled: yes
-
-- name: Start service metricbeat
-  systemd:
-    name: metricbeat
-    state: started
+  notify: Restart metricbeat

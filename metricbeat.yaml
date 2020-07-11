@@ -8,3 +8,10 @@
   
   roles:
   - metricbeat
+
+  handlers:
+  - name: Restart metricbeat
+    service: 
+      name: metricbeat
+      enabled: yes
+      state: restarted
