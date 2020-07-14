@@ -24,11 +24,20 @@
     recurse: yes
   become: yes
 
-- name: Configure correct IP address for node
+- name: Configure correct IP address for node - standard
   lineinfile:
     path: "{{ prysm_install_path }}/config/beacon.yaml"
     regexp: '^p2p-host-ip: '
     line: 'p2p-host-ip: {{ ansible_default_ipv4.address }}'
 
+- name: Configure correct IP address for node - no-geth
+  lineinfile:
+    path: "{{ prysm_install_path }}/config/beacon-no-geth.yaml"
+    regexp: '^p2p-host-ip: '
+    line: 'p2p-host-ip: {{ ansible_default_ipv4.address }}'
 
-
+- name: Configure correct IP address for node - high-availability
+  lineinfile:
+    path: "{{ prysm_install_path }}/config/ha/beacon.yaml"
+    regexp: '^p2p-host-ip: '
+    line: 'p2p-host-ip: {{ ansible_default_ipv4.address }}'
