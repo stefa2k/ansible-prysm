@@ -8,7 +8,7 @@ x-disabled-service:
                 entrypoint: ""
 
 services:
-{% if !eth2node_ha_use_external_eth1 %}
+{% if eth2node_ha_use_external_eth1 == false %}
         geth:
                 ports:
                         - {{hostvars[inventory_hostname].eth2node_ha_ip}}:8545:8545

@@ -45,7 +45,7 @@ frontend eth1_fe
 backend eth1_be
         mode http
 
-{% if !eth2node_ha_use_external_eth1 %}
+{% if eth2node_ha_use_external_eth1 == false %}
         option httpchk POST / HTTP/1.0\r\nContent-Type:\ application/json\r\nContent-Length:\ 59\r\n\r\n{\"jsonrpc\":\"2.0\",\"method\":\"eth_syncing\",\"params\":[],\"id\":1}
         http-check expect string '{"jsonrpc":"2.0","id":1,"result":false}'
         
@@ -62,7 +62,7 @@ backend eth1_be
 {% endif %}
         http-request set-header Host {{eth2node_ha_external_eth1_host}}
 
-        server eth1_external {{eth2node_ha_external_eth1_host}}:{{eth2node_ha_external_eth1_port}} check {% if eth2node_ha_external_eth1_ssl %} check-ssl ssl verify none sni str({{eth2node_ha_external_eth1_host}}) check-sni {{eth2node_ha_external_eth1_host}}{% endif %}
+        server eth1_external {{eth2node_ha_external_eth1_host}}:{{eth2node_ha_external_eth1_port}} check {% if eth2node_ha_external_eth1_ssl == true %} check-ssl ssl verify none sni str({{eth2node_ha_external_eth1_host}}) check-sni {{eth2node_ha_external_eth1_host}}{% endif %}
 {% endif %}
 
 ##################
