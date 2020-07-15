@@ -2,6 +2,12 @@
 - hosts: all
   vars_files:
   - ./vars/vars.yaml
+  vars:
+    eth2node_ha_use_external_eth1: no
+    eth2node_ha_external_eth1_uri: ""
+    eth2node_ha_external_eth1_host: your-eth1-api-host.com
+    eth2node_ha_external_eth1_port: 443
+    eth2node_ha_external_eth1_ssl: yes
 
   roles:
   - eth2node-ha

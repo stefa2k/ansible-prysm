@@ -30,9 +30,10 @@ frontend stats
         stats refresh 5s
         stats admin if TRUE
 
+
 ################
 # geth
-frontend geth_fe
+frontend eth1_fe
         mode http
         
         bind *:18545
@@ -41,19 +42,28 @@ frontend geth_fe
 
         default_backend geth_be
 
-backend geth_be
+backend eth1_be
         mode http
 
+{% if !eth2node_ha_use_external_eth1 %}
         option httpchk POST / HTTP/1.0\r\nContent-Type:\ application/json\r\nContent-Length:\ 59\r\n\r\n{\"jsonrpc\":\"2.0\",\"method\":\"eth_syncing\",\"params\":[],\"id\":1}
         http-check expect string '{"jsonrpc":"2.0","id":1,"result":false}'
         
         default-server check inter 5s fall 1 rise 3 init-addr none
         server srv1 geth:8545 resolvers nocachedns
 {% for host in ansible_play_hosts %}
-  {% if host != inventory_hostname and hostvars[host].eth2node_ha_name != "" and hostvars[host].eth2node_ha_ip != "" %}
+{% if host != inventory_hostname and hostvars[host].eth2node_ha_name != "" and hostvars[host].eth2node_ha_ip != "" %}
         server {{hostvars[host].eth2node_ha_name}} {{hostvars[host].eth2node_ha_ip}}:8545 backup
-  {% endif %}
+{% endif %}
 {% endfor %}
+{% else %}
+{% if eth2node_ha_external_eth1_uri != "" %}
+        http-request set-path {{eth2node_ha_external_eth1_uri}}
+{% endif %}
+		http-request set-header Host {{eth2node_ha_external_eth1_host}}
+
+        server eth1_external {{eth2node_ha_external_eth1_host}}:{{eth2node_ha_external_eth1_port}} check {% if eth2node_ha_external_eth1_ssl %} check-ssl ssl verify none sni str({{eth2node_ha_external_eth1_host}}) check-sni {{eth2node_ha_external_eth1_host}}{% endif %}
+{% endif %}
 
 ##################
 # beacon chain
