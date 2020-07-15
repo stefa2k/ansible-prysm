@@ -47,8 +47,8 @@
     enabled: yes
     masked: no  
 
-- name: adding existing user '{{ prysm_user }}' to group docker
+- name: adding existing prysm-user to group docker
   user:
-    name: '{{ user }}'
+    name: '{{ prysm_user }}'
     groups: docker
     append: yes
