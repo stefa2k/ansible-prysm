@@ -21,6 +21,6 @@
     chdir: "{{ prysm_install_path }}"
 
 - name: Start serivces (except validator)
-  command: docker-compose up -d geth beacon slasher haproxy
+  command: docker-compose up -d {{ hostvars[host].eth2node_ha_start_services|join(' ') }}
   args:
     chdir: "{{ prysm_install_path }}"
