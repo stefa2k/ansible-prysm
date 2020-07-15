@@ -60,7 +60,7 @@ backend eth1_be
 {% if eth2node_ha_external_eth1_uri != "" %}
         http-request set-path {{eth2node_ha_external_eth1_uri}}
 {% endif %}
-		http-request set-header Host {{eth2node_ha_external_eth1_host}}
+        http-request set-header Host {{eth2node_ha_external_eth1_host}}
 
         server eth1_external {{eth2node_ha_external_eth1_host}}:{{eth2node_ha_external_eth1_port}} check {% if eth2node_ha_external_eth1_ssl %} check-ssl ssl verify none sni str({{eth2node_ha_external_eth1_host}}) check-sni {{eth2node_ha_external_eth1_host}}{% endif %}
 {% endif %}

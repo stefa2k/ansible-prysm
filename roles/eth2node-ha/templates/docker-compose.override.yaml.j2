@@ -8,9 +8,14 @@ x-disabled-service:
                 entrypoint: ""
 
 services:
+{% if !eth2node_ha_use_external_eth1 %}
         geth:
                 ports:
                         - {{hostvars[inventory_hostname].eth2node_ha_ip}}:8545:8545
+{% else %}
+        geth:
+                <<: *disabled-service
+{% endif %}
         beacon:
                 depends_on:
                         - haproxy
