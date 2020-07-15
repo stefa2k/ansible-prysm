@@ -2,6 +2,8 @@
 - hosts: all
   vars_files:
   - ./vars/vars.yaml
+  vars:
+    start_syncing: yes
 
   roles:
   - eth2node

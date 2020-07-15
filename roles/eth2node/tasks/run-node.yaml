@@ -3,10 +3,12 @@
   command: docker-compose up -d geth
   args:
     chdir: "{{ prysm_install_path }}"
+  when: start_syncing
 
 - name: Wait a minute until geth container starts up
   pause:
     minutes: 1
+  when: start_syncing
 
 - name: Waiting for geth to finish syncing
   command: "docker-compose exec geth geth attach {{ geth_connection }} --exec=\"eth.syncing\""
@@ -16,8 +18,10 @@
   until: geth_sync.stdout|regex_findall('false')|length == 1
   retries: 4320 # 6 hours with 5 seconds delay
   delay: 5
+  when: start_syncing
 
 - name: Start beacon 
   command: docker-compose up -d beacon
   args:
     chdir: "{{ prysm_install_path }}"
+  when: start_syncing
