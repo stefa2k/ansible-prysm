@@ -9,9 +9,9 @@ defaults
         option  dontlognull
         option  dontlog-normal
         
-        timeout connect 3s
-        timeout queue 3s
-        timeout server 5s
+        timeout connect 10s
+        timeout queue 30s
+        timeout server 30s
 
 ###################
 # docker dns server
@@ -38,7 +38,7 @@ frontend eth1_fe
         
         bind *:18545
 
-        timeout client 15s
+        timeout client 60s
 
         default_backend eth1_be
 
