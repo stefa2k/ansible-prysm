@@ -32,7 +32,7 @@ frontend stats
 
 
 ################
-# geth
+# ethereum 1 api
 frontend eth1_fe
         mode http
         
@@ -40,7 +40,7 @@ frontend eth1_fe
 
         timeout client 15s
 
-        default_backend geth_be
+        default_backend eth1_be
 
 backend eth1_be
         mode http
