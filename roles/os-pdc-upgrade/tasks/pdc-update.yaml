@@ -13,7 +13,7 @@
 - name: src-host - You are not on master branch!
   debug:
     msg: "You are not on master branch, but on this branch {{ current_branch.stdout }}"
-  when: inventory_hostname == 'to_upgrade' and current_branch.stdout != 'master'
+  when: current_branch.stdout != 'master'
 
 - name: src-host - git stash (save changes)
   shell: "git stash"
