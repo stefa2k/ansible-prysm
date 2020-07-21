@@ -7,7 +7,7 @@ Take a look at `./vars/vars.yaml` and set values of settings accordingly to your
 ## Usage
 Create an inventory (not included) and run:
 ```
-ansible-playbook -i inventory.eth2.yaml docker.yaml eth2node.yaml
+ansible-playbook -i inventory.eth2.yaml eth2node.yaml
 ```
 After successful sync of beacon chain & funding of eth1 wallet run:
 ```
@@ -17,7 +17,6 @@ ansible-playbook -i inventory.eth2.yaml withdrawal-wallet.yaml validator-wallets
 ## Playbooks
 yaml | Description
 -----|------------
-`docker.yaml` | Installs docker.io and docker-compose
 `eth2node.yaml` | Installs & configures [prysm-docker-compose](https://github.com/stefa2k/prysm-docker-compose); runs `geth` and `beacon`
 `withdrawal-wallet.yaml` | Creates a withdrawal wallet & account ([ethdo](https://github.com/wealdtech/ethdo))
 `validator-wallets.yaml` | Creates a validator wallet & as many accounts ([ethdo](https://github.com/wealdtech/ethdo)) as defined in `./vars/vars.yaml:validator_accounts`, writes depositdata, copies wallet to be used by [prysm-docker-compose](https://github.com/stefa2k/prysm-docker-compose)
