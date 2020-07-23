@@ -1,7 +1,7 @@
 ---
 - name: Create validator accounts
   include_tasks: create-validator-account.yaml
-  loop: "{{ query('sequence', 'start=1 end='+validator_accounts|string) }}"
+  loop: "{{ query('sequence', 'start=1 end='+(validator_accounts|string)) }}"
 
 - name: Locate validator wallet
   command: /home/{{ prysm_user }}/go/bin/ethdo wallet info --wallet="{{ validator_wallet_name }}" --verbose
