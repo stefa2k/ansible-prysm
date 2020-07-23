@@ -4,6 +4,7 @@ validator_wallet_type: hd
 validator_wallet_password: foobar
 validator_accounts_password: foobar
 validator_accounts: "10" # this must be a string!
+validator_forkversion: "0x00000001"
 prysm_install_path: /opt/prysm-docker-compose
 withdrawal_wallet_name: wd2
 withdrawal_wallet_type: hd
@@ -11,7 +12,7 @@ withdrawal_wallet_password: foobar
 withdrawal_account_name: all
 withdrawal_account_password: foobar
 
-deposit_contract: "0x0F0F0fc0530007361933EaB5DB97d09aCDD6C1c8"
+deposit_contract: "0x07b39F4fDE4A38bACe212b546dAc87C58DfE3fDC"
 geth_connection: http://localhost:8545/
 geth_account_password: foobar
 geth_account: "0xfoobar"

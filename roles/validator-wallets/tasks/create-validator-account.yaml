@@ -7,7 +7,7 @@
   command: /home/{{ prysm_user }}/go/bin/ethdo account create --account="{{ new_validator_name }}" --walletpassphrase="{{ validator_wallet_password }}"  --passphrase="{{ validator_accounts_password }}"
   
 - name: Get deposit data
-  command: /home/{{ prysm_user }}/go/bin/ethdo validator depositdata --withdrawalaccount="{{ withdrawal_wallet_name }}/{{ withdrawal_account_name }}" --validatoraccount="{{ new_validator_name }}"  --depositvalue=32000000000000000000 --raw --passphrase="{{ validator_accounts_password }}"
+  command: /home/{{ prysm_user }}/go/bin/ethdo validator depositdata --withdrawalaccount="{{ withdrawal_wallet_name }}/{{ withdrawal_account_name }}" --validatoraccount="{{ new_validator_name }}"  --depositvalue=32000000000000000000 --raw --passphrase="{{ validator_accounts_password }}" --forkversion="{{ validator_forkversion }}"
   register: deposit_data_raw
   
 - name: Save deposit data
