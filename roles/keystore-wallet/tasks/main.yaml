@@ -1,8 +1,4 @@
 ---
-- name: Gather account names
-  command: /home/{{ prysm_user }}/go/bin/ethdo wallet accounts --wallet="{{ validator_wallet_name }}"
-  register: valiator_accounts
-  
 - name: Create file
   file:
     path: /home/{{ prysm_user }}/keystoreWallet.json
@@ -19,10 +15,7 @@
 - name: Appending validators' names
   lineinfile:
     path: /home/{{ prysm_user }}/keystoreWallet.json
-    line: "{% if validator_idx > 0 %},{% endif %}\"{{ validator_wallet_name}}/{{ item }}\""
-  with_items: "{{ valiator_accounts.stdout.splitlines() }}"
-  loop_control:
-    index_var: validator_idx
+    line: "\"{{ validator_wallet_name}}/*\""
 
 - name: Prepare password list
   lineinfile:
@@ -32,11 +25,7 @@
 - name: Appending validators' passwords
   lineinfile:
     path: /home/{{ prysm_user }}/keystoreWallet.json
-    regexp: "^ no this line doesnt exist"
-    line: "{% if validator_idx > 0 %},{% endif %}\"{{ validator_accounts_password }}\""
-  with_items: "{{ valiator_accounts.stdout.splitlines() }}"
-  loop_control:
-    index_var: validator_idx
+    line: "\"{{ validator_accounts_password }}\""
 
 - name: Finish file's content (json)
   lineinfile:
