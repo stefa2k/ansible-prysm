@@ -61,12 +61,12 @@
     backup: yes
     insertafter: "- module: docker"
     block: |2
-      metricsets:
-        - container
-        - cpu
-        - diskio
-        - memory
-        - network
+        metricsets:
+          - container
+          - cpu
+          - diskio
+          - memory
+          - network
   notify: Restart metricbeat
 
 - name: Create dashboards in Kibana
