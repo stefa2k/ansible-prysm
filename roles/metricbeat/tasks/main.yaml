@@ -28,7 +28,7 @@
   lineinfile:
     path: "{{ metricbeat_yml }}"
     insertafter: "output.elasticsearch:"
-    line: "  hosts: [\"{{ metricbeat_connection }}\"]"
+    line: "  hosts: [\"{{ hostvars[inventory_hostname].metricbeat_connection }}\"]"
   notify: Restart metricbeat
 
 - name: metricbeat.yml - remove previously defined Kibana host
