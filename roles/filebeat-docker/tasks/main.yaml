@@ -59,6 +59,5 @@
   lineinfile:
     path: "{{ filebeat_yml }}"
     insertafter: "output.logstash:"
-    line: "  hosts: [\"{{ item }}\"]"
-  with_items: "{{ filebeat_connections }}"
+    line: "  hosts: [{{ filebeat_connections | map('quote') | join(', ') }}]"
   notify: Restart filebeat
