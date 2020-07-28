@@ -17,16 +17,54 @@
   notify: Restart metricbeat
   when: '"metricbeat.service" not in ansible_facts.services'
 
-- name: metricbeat.yml - remove previously configured elasticsearch hosts
+- name: metricbeat.yml - remove previously configured Elasticsearch hosts
   lineinfile:
     path: "{{ metricbeat_yml }}"
     regexp: '^ *hosts:'
     state: absent
   notify: Restart metricbeat
 
-- name: metricbeat.yml - add elasticsearch host
+- name: metricbeat.yml - add Elasticsearch host
   lineinfile:
     path: "{{ metricbeat_yml }}"
     insertafter: "output.elasticsearch:"
     line: "  hosts: [\"{{ metricbeat_connection }}\"]"
+  notify: Restart metricbeat
+
+- name: metricbeat.yml - remove previously defined Kibana host
+  lineinfile:
+    path: "{{ metricbeat_yml }}"
+    regexp: '^ *host:'
+    state: absent
+  notify: Restart metricbeat
+
+- name: metricbeat.yml - add Kibana host
+  lineinfile:
+    path: "{{ metricbeat_yml }}"
+    insertafter: "setup.kibana:"
+    line: "  host: \"{{ metricbeat_kibana }}\""
+  notify: Restart metricbeat
+
+- name: docker.yml - check if module is disabled
+  stat: 
+    path: "{{ metricbeat_docker_yml }}.disabled"
+  register: docker_disabled
+
+- name: docker.yml - enable module
+  shell: "mv {{ metricbeat_docker_yml }}.disabled {{ metricbeat_docker_yml }}"
+  when: docker_disabled.exists
+  notify: Restart metricbeat
+
+- name: docker.yml - enable metrics
+  blockinfile:
+    path: "{{ metricbeat_docker_yml }}"
+    backup: yes
+    insertafter: "- module: docker"
+    block: |2
+      metricsets:
+        - container
+        - cpu
+        - diskio
+        - memory
+        - network
   notify: Restart metricbeat
