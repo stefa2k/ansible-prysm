@@ -52,7 +52,7 @@
 
 - name: docker.yml - enable module
   shell: "mv {{ metricbeat_docker_yml }}.disabled {{ metricbeat_docker_yml }}"
-  when: docker_disabled.exists
+  when: docker_disabled.stat.exists
   notify: Restart metricbeat
 
 - name: docker.yml - enable metrics
