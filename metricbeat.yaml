@@ -6,6 +6,7 @@
     metricbeat_docker_yml: /etc/metricbeat/docker.yml
     metricbeat_system_yml: /etc/metricbeat/system.yml
     metricbeat_connection: localhost:9200
+    metricbeat_kibana: localhost:5601
     metricbeat_version: 7.7.1
   
   roles:
