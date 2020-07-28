@@ -68,3 +68,7 @@
         - memory
         - network
   notify: Restart metricbeat
+
+- name: Create dashboards in Kibana
+  shell: "metricbeat setup --dashboards"
+  run_once: yes
