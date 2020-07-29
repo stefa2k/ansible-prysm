@@ -112,7 +112,7 @@ backend slasher_be
 
 {% for host in ansible_play_hosts|sort %}
 {%   if loop.first %}
-        server srv1 slasher:4002 resolvers nocachedns
+        server {{hostvars[host].eth2node_ha_name}} {{hostvars[host].eth2node_ha_ip}}:4002 resolvers nocachedns
 {%   else %}
         server {{hostvars[host].eth2node_ha_name}} {{hostvars[host].eth2node_ha_ip}}:4002 backup
 {%   endif %}
