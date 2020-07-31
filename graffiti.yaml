@@ -1,0 +1,13 @@
+---
+- hosts: all
+  vars_files:
+  - ./vars/vars.yaml
+  vars:
+    validator_graffiti: "stefa2k/prysm-docker-compose"
+    validator_configs:
+    - "validator.yaml"
+    - "validator-wallet.yaml"
+    - "ha/validator-wallet.yaml"
+  
+  roles:
+  - graffiti

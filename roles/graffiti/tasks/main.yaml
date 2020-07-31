@@ -1,0 +1,7 @@
+---
+- name: Configure graffiti
+  lineinfile:
+    path: "{{ prysm_install_path }}/config/{{ item }}"
+    regexp: '^graffiti: '
+    line: 'graffiti: {{ validator_graffiti }}'
+  with_items: "{{ validator_configs }}"
