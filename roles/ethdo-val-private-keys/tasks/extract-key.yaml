@@ -1,0 +1,10 @@
+---
+- name: Extract key
+  shell: "/home/{{ prysm_user }}/go/bin/ethdo ethdo account info --account=\"{{ validator_wallet_name }}/m/12381/3600/{{ account_idx }}/0\"
+  register: private_key
+
+- name: Write key to file
+  lineinfile:
+    path: "{{ prysm_install_path }}/private_keys"
+    line: "{{ private_key.stdout }}"
+    create: yes

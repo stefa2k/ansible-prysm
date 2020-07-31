@@ -1,0 +1,7 @@
+---
+- hosts: all
+  vars_files:
+  - ./vars/vars.yaml
+  
+  roles:
+  - ethdo-val-private-keys

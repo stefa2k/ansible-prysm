@@ -1,0 +1,4 @@
+---
+- name: Validator accounts
+  include_tasks: extract-key.yaml
+  loop: "{{ query('sequence', 'start=1 end='+(validator_accounts|string)) }}"
