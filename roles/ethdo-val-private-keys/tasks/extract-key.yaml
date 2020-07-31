@@ -1,6 +1,10 @@
 ---
+- name: Processing index
+  debug:
+    msg: "{{ account_idx }}"
+
 - name: Extract key
-  shell: "/home/{{ prysm_user }}/go/bin/ethdo ethdo account info --account=\"{{ validator_wallet_name }}/m/12381/3600/{{ account_idx }}/0\"
+  shell: "/home/{{ prysm_user }}/go/bin/ethdo ethdo account key --account="{{ validator_wallet_name }}/m/12381/3600/{{ account_idx }}/0" --walletpassphrase=\"{{validator_wallet_password}}\""
   register: private_key
 
 - name: Write key to file
