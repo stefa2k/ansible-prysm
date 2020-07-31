@@ -10,7 +10,9 @@
   args:
     chdir: "{{ prysm_install_path }}"
   register: beacon_logs
-  until: beacon_logs.stdout|regex_findall('Synced new block')|length > 0
+  until: >
+    beacon_logs.stdout|regex_findall('Synced new block')|length > 0 or
+    beacon_logs.stdout|regex_findall('Waiting to reach the validator deposit threshold to start the beacon chain')|length > 0
   retries: 900 # 15 minutes
   delay: 1
 
@@ -28,7 +30,8 @@
   until: >
     validator_logs.stdout|regex_findall('Validating for public key')|length > 0 or
     validator_logs.stdout|regex_findall('Attestation schedule')|length > 0 or
-    validator_logs.stdout|regex_findall('Submitted new attestations')|length > 0
+    validator_logs.stdout|regex_findall('Submitted new attestations')|length > 0 or
+    validator_logs.stdout|regex_findall('Waiting for beacon chain start log from the ETH 1.0 deposit contract')|length > 0
   retries: 600 # 10 minutes
   delay: 1
   when: hostvars[inventory_hostname].starting_validator
