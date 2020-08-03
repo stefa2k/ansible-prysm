@@ -12,7 +12,8 @@
   register: beacon_logs
   until: >
     beacon_logs.stdout|regex_findall('Synced new block')|length > 0 or
-    beacon_logs.stdout|regex_findall('Waiting to reach the validator deposit threshold to start the beacon chain')|length > 0
+    beacon_logs.stdout|regex_findall('Waiting to reach the validator deposit threshold to start the beacon chain')|length > 0 or
+    beacon_logs.stdout|regex_findall(' until chain genesis')|length > 0
   retries: 900 # 15 minutes
   delay: 1
 
