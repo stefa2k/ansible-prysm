@@ -9,13 +9,16 @@
   apt:
     upgrade: "yes"
   become: yes
+  register: upgrade_state
 
 - name: src-host - Update all packages to the latest version
   apt:
     upgrade: dist
   become: yes
+  register: dist_upgrade_state
 
 - name: src-host - Reboot host
   reboot:
     reboot_timeout: 600
   become: yes
+  when: upgrade_state.changed or dist_upgrade_state.changed
