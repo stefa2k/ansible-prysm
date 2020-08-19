@@ -11,7 +11,7 @@ defaults
         
         timeout connect 10s
         timeout queue 30s
-        timeout server 30s
+        timeout server 600s
 
 ###################
 # docker dns server
@@ -72,7 +72,7 @@ frontend beacon_fe
 
         bind *:14000 alpn h2,http/1.1
 
-        timeout client 15s
+        timeout client 60s
 
         default_backend beacon_be
 
@@ -98,7 +98,7 @@ frontend slasher_fe
         
         bind *:14002 alpn h2,http/1.1
         
-        timeout client 15s
+        timeout client 60s
         
         default_backend slasher_be
 
