@@ -13,7 +13,7 @@
   uri:
     url: "http://{{eth2node_ha_ip}}:8480/healthz"
     return_content: yes
-  until: "'error' not in this.content"
+  until: "'error' not in result.content"
   retries: 1200
   delay: 3
   when: "'beacon' in starting_containers"
@@ -33,7 +33,7 @@
   uri:
     url: "http://{{eth2node_ha_ip}}:8680/healthz"
     return_content: yes
-  until: "'error' not in this.content"
+  until: "'error' not in result.content"
   retries: 600
   delay: 3
   when: "'slasher' in starting_containers"
@@ -53,7 +53,7 @@
   uri:
     url: "http://{{eth2node_ha_ip}}:8580/healthz"
     return_content: yes
-  until: "'error' not in this.content"
+  until: "'error' not in result.content"
   retries: 600
   delay: 3
   when: hostvars[inventory_hostname].starting_validator
