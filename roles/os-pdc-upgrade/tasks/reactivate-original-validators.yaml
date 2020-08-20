@@ -13,6 +13,7 @@
   uri:
     url: "http://{{eth2node_ha_ip}}:8480/healthz"
     return_content: yes
+    status_code: 200,503
   register: result
   until: "'error' not in result.content"
   retries: 1200
@@ -34,6 +35,7 @@
   uri:
     url: "http://{{eth2node_ha_ip}}:8680/healthz"
     return_content: yes
+    status_code: 200,503
   register: result
   until: "'error' not in result.content"
   retries: 600
@@ -55,6 +57,7 @@
   uri:
     url: "http://{{eth2node_ha_ip}}:8580/healthz"
     return_content: yes
+    status_code: 200,503
   register: result
   until: "'error' not in result.content"
   retries: 600
