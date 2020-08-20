@@ -1,38 +1,59 @@
 ---
-- name: src-host - Start prysm-docker-compose except validator
+- name: Start prysm-docker-compose except validator and slasher
   shell: "docker-compose up -d {{ item }}"
   args:
     chdir: "{{ prysm_install_path }}"
-  with_items: "{{ starting_containers }}"
+  with_items: "{{ starting_containers | difference(['slasher']) }}"
 
-- name: src-host - Check on beacon node (fully synced)
-  shell: "docker-compose logs --tail=10 beacon"
+- name: Give services time to spinn up
+  pause:
+    minutes: 1
+
+- name: Check health of beacon service
+  uri:
+    url: "http://{{eth2node_ha_ip}}:8480/healthz"
+    return_content: yes
+  until: "'error' not in this.content"
+  retries: 1200
+  delay: 3
+  when: 'beacon' in starting_containers
+
+- name: Start slasher
+  shell: "docker-compose up -d slasher"
   args:
     chdir: "{{ prysm_install_path }}"
-  register: beacon_logs
-  until: >
-    beacon_logs.stdout|regex_findall('Synced new block')|length > 0 or
-    beacon_logs.stdout|regex_findall('Waiting to reach the validator deposit threshold to start the beacon chain')|length > 0 or
-    beacon_logs.stdout|regex_findall(' until chain genesis')|length > 0
-  retries: 900 # 15 minutes
-  delay: 1
+  when: 'slasher' in starting_containers
 
-- name: src-host - Start validators
+- name: Give slasher service time to spinn up
+  pause:
+    minutes: 1
+  when: 'slasher' in starting_containers
+
+- name: Check health of slasher service
+  uri:
+    url: "http://{{eth2node_ha_ip}}:8680/healthz"
+    return_content: yes
+  until: "'error' not in this.content"
+  retries: 600
+  delay: 3
+  when: 'slasher' in starting_containers
+
+- name: Start validators
   shell: "docker-compose stop validator && docker-compose up -d validator"
   args:
     chdir: "{{ prysm_install_path }}"
   when: hostvars[inventory_hostname].starting_validator
 
-- name: src-host - Check on validator (staking)
-  shell: "docker-compose logs --tail=4 validator"
-  args:
-    chdir: "{{ prysm_install_path }}"
-  register: validator_logs
-  until: >
-    validator_logs.stdout|regex_findall('Validating for public key')|length > 0 or
-    validator_logs.stdout|regex_findall('Attestation schedule')|length > 0 or
-    validator_logs.stdout|regex_findall('Submitted new attestations')|length > 0 or
-    validator_logs.stdout|regex_findall('Waiting for beacon chain start log from the ETH 1.0 deposit contract')|length > 0
-  retries: 600 # 10 minutes
-  delay: 1
+- name: Give validator service time to spinn up
+  pause:
+    minutes: 1
+  when: hostvars[inventory_hostname].starting_validator
+
+- name: Check health of validator service
+  uri:
+    url: "http://{{eth2node_ha_ip}}:8580/healthz"
+    return_content: yes
+  until: "'error' not in this.content"
+  retries: 600
+  delay: 3
   when: hostvars[inventory_hostname].starting_validator
