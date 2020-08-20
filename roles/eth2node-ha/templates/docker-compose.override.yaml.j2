@@ -28,6 +28,8 @@ services:
         validator:
                 depends_on:
                         - haproxy
+				ports:
+				        - {{hostvars[inventory_hostname].eth2node_ha_ip}}:8580:8580
                 volumes:
                         - ./config/ha/validator-wallet.yaml:/config/validator.yaml:ro
         slasher:
