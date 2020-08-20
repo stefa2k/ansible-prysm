@@ -16,18 +16,18 @@
   until: "'error' not in this.content"
   retries: 1200
   delay: 3
-  when: 'beacon' in starting_containers
+  when: "'beacon' in starting_containers"
 
 - name: Start slasher
   shell: "docker-compose up -d slasher"
   args:
     chdir: "{{ prysm_install_path }}"
-  when: 'slasher' in starting_containers
+  when: "'slasher' in starting_containers"
 
 - name: Give slasher service time to spinn up
   pause:
     minutes: 1
-  when: 'slasher' in starting_containers
+  when: "'slasher' in starting_containers"
 
 - name: Check health of slasher service
   uri:
@@ -36,7 +36,7 @@
   until: "'error' not in this.content"
   retries: 600
   delay: 3
-  when: 'slasher' in starting_containers
+  when: "'slasher' in starting_containers"
 
 - name: Start validators
   shell: "docker-compose stop validator && docker-compose up -d validator"
