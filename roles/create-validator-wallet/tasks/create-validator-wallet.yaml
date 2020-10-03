@@ -1,13 +1,3 @@
 ---
 - name: Create validator wallet
   command: /home/{{ prysm_user }}/go/bin/ethdo wallet create --wallet="{{ validator_wallet_name }}" --type="{{ validator_wallet_type }}" --walletpassphrase="{{ validator_wallet_password }}"
-
-- name: Read validator wallet seed
-  command: /home/{{ prysm_user }}/go/bin/ethdo wallet seed --wallet="{{ validator_wallet_name }}" --walletpassphrase="{{ validator_wallet_password }}"
-  register: wallet_seed
-  when: validator_wallet_type == "hd"
-
-- name: Your validator wallet seed (write it down and store it safe!)
-  debug:
-    msg: "{{ wallet_seed }}"
-  when: validator_wallet_type == "hd"
