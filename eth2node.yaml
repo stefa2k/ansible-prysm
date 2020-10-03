@@ -6,4 +6,5 @@
     start_syncing: yes
 
   roles:
+  - ethdo
   - eth2node

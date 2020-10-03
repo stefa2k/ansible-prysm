@@ -2,8 +2,5 @@
 - name: Set up Ethereum 2.0 node
   include_tasks: setup-node.yaml
 
-- name: Set up Ethdo
-  include_tasks: setup-ethdo.yaml
-
 - name: Run Ethereum 2.0 node
   include_tasks: run-node.yaml
