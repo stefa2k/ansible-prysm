@@ -1,6 +1,6 @@
 ---
 - name: Unlock geth account
-  shell: "docker exec -it geth geth attach {{ geth_connection }} --exec=\"personal.unlockAccount('{{ geth_account }}','{{ geth_account_password }}',36000)\""
+  shell: "docker exec -it {{ geth_container_name }} geth attach {{ geth_connection }} --exec=\"personal.unlockAccount('{{ geth_account }}','{{ geth_account_password }}',36000)\""
   register: unlock_result
 
 - name: Check unlock

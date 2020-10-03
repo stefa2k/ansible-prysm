@@ -16,6 +16,7 @@ deposit_contract: "0x07b39F4fDE4A38bACe212b546dAc87C58DfE3fDC"
 geth_connection: http://localhost:8545/
 geth_account_password: foobar
 geth_account: "0xfoobar"
+geth_container_name: geth
 
 filebeat_connections:
 - localhost:5044

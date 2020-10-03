@@ -1,5 +1,5 @@
 - name: Send funds
-  shell: "docker exec -it geth geth attach {{ geth_connection }} --exec=\"eth.sendTransaction({from:eth.coinbase, to:'{{ deposit_contract }}', value: web3.toWei(32, 'ether'), data: '{{ item }}', gas: 600000})\""
+  shell: "docker exec -it {{ geth_container_name }} geth attach {{ geth_connection }} --exec=\"eth.sendTransaction({from:eth.coinbase, to:'{{ deposit_contract }}', value: web3.toWei(32, 'ether'), data: '{{ item }}', gas: 600000})\""
   register: send_result
 
 - name: Check sending
